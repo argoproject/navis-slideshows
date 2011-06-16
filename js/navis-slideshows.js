@@ -9,9 +9,20 @@ function loadSlideshow( postID, permalink, totalSlides ) {
 
     // Get slide number if it exists
     if ( window.location.hash ) {
-        startSlide = window.location.hash.replace( "#","" );
-        if ( parseInt( startSlide ) > 0 ) {
-            ensureAllImagesAreLoaded( postID, totalSlides );
+        fragment = window.location.hash.replace( "#","" );
+        slideNum = parseInt( fragment );
+
+        if ( ! isNaN( slideNum ) ) {
+            startSlide = slideNum;
+            ensureImageIsLoaded( postID, slideNum );
+
+            ensureImageIsLoaded( postID, 
+                getNextSlideNum( slideNum, totalSlides ) 
+            );
+            ensureImageIsLoaded( postID, 
+                getPrevSlideNum( slideNum, totalSlides ) 
+            );
+
             jQuery( slidePermalinkElement ).attr( "href", permalink + "#" + startSlide );
         }
     }

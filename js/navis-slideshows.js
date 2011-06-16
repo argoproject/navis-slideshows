@@ -1,43 +1,16 @@
-function ensureAllImagesAreLoaded( postID, count ) {
-    for ( i = 1; i <= count; i++ ) {
-        ensureImageIsLoaded( postID + "-slide" + i );
-    }
-}
-
-function ensureImageIsLoaded( divID ) {
-    var slideDiv = jQuery( "#" + divID );
-    // Do nothing if the slide image already exists
-    if ( slideDiv.has( "img" ).length ) {
-        return;
-    }
-    var imgData = slideDiv.attr("data-src");
-    if ( imgData ) {
-        var parts = imgData.split("*");
-        var img = jQuery("<img/>")
-            .attr( "src", parts[0] )
-            .attr( "width", parts[1] )
-            .attr( "height", parts[2] );
-        slideDiv.prepend( img );
-    }
-}
-
-function getSlideElement( postID, slideNum ) {
-    return postID + '-slide' + slideNum;
-}
-
 function loadSlideshow( postID, permalink, totalSlides ) {
     var startSlide = 1;
     var startHash = "#1";
     var slideContainerDiv = '#slides-' + postID;
     var slidePermalinkElement = slideContainerDiv + ' a.slide-permalink';
+    var currentSlide;
 
     jQuery( slidePermalinkElement ).attr( "href", permalink + startHash );
 
     // Get slide number if it exists
     if ( window.location.hash ) {
         startSlide = window.location.hash.replace( "#","" );
-        if ( parseInt( startSlide ) ) {
-            ensureImageIsLoaded( getSlideElement( postID, startSlide ) );
+        if ( parseInt( startSlide ) > 0 ) {
             ensureAllImagesAreLoaded( postID, totalSlides );
             jQuery( slidePermalinkElement ).attr( "href", permalink + "#" + startSlide );
         }
@@ -52,19 +25,80 @@ function loadSlideshow( postID, permalink, totalSlides ) {
         start: startSlide,
         animationComplete: function( current ) {
             // Set the slide number as a hash
+            currentSlide = current;
             var curSlide = "#" + current;
 
-            ensureImageIsLoaded( getSlideElement( postID, current ) );
-            var nextSlide = current + 1;
-            ensureImageIsLoaded( getSlideElement( postID, nextSlide ) );
-            jQuery( slidePermalinkElement ).attr("href", permalink + curSlide);
+            ensureImageIsLoaded( postID, current );
+            ensureImageIsLoaded( 
+                postID, getNextSlideNum( current, totalSlides ) 
+            );
+            jQuery( slidePermalinkElement ).attr(
+                "href", permalink + curSlide
+            );
         }
     });
 
+    // Pre-load the next and previous images when the user jumps to a
+    // specific slide
     jQuery( ".navis-slideshow .pagination a" ).click( function( evt ) {
-        var slideNum = jQuery(this).text();
-        var nextSlide = parseInt( slideNum ) + 1;
-        ensureImageIsLoaded( getSlideElement( postID, slideNum ) );
-        ensureImageIsLoaded( getSlideElement( postID, nextSlide ) );
+        var slideNum = parseInt( jQuery(this).text() );
+        ensureImageIsLoaded( postID, slideNum );
+        ensureImageIsLoaded( postID, getNextSlideNum( slideNum, totalSlides ) );
+        ensureImageIsLoaded( postID, getPrevSlideNum( slideNum, totalSlides ) );
     });
+
+    // Ensure the previous image is loaded when the user goes back
+    jQuery( ".navis-slideshow .slide-nav .prev" ).click( function( evt ) {
+        ensureImageIsLoaded( 
+            postID, getPrevSlideNum( currentSlide, totalSlides ) 
+        );
+    });
+
+    // Ensure the previous image is loaded when the user goes back
+    jQuery( ".navis-slideshow .slide-nav .next" ).click( function( evt ) {
+        ensureImageIsLoaded( 
+            postID, getNextSlideNum( currentSlide, totalSlides ) 
+        );
+    });
+}
+
+
+function getSlideElement( postID, slideNum ) {
+    return postID + '-slide' + slideNum;
+}
+
+
+function getNextSlideNum( current, count ) {
+    return ( current + 1 > count ) ? 1 : current + 1;
+}
+
+
+function getPrevSlideNum( current, count ) {
+    return ( current == 1 ) ? count : current - 1;
+}
+
+
+function ensureImageIsLoaded( postID, slideNum ) {
+    var slideDiv = jQuery( "#" + getSlideElement( postID, slideNum ) );
+
+    // Do nothing if the slide image already exists
+    if ( slideDiv.has( "img" ).length )
+        return;
+
+    var imgData = slideDiv.attr( "data-src" );
+    if ( imgData ) {
+        var parts = imgData.split( "*" );
+        var img = jQuery( "<img/>" )
+            .attr( "src", parts[0] )
+            .attr( "width", parts[1] )
+            .attr( "height", parts[2] );
+        slideDiv.prepend( img );
+    }
+}
+
+
+function ensureAllImagesAreLoaded( postID, count ) {
+    for ( i = 1; i <= count; i++ ) {
+        ensureImageIsLoaded( getSlideElement( postID, i ) );
+    }
 }

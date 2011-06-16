@@ -142,8 +142,10 @@ class Navis_Slideshows {
             <div class="slides_container">';
 
         /*-- Add images --*/
-        $count = 1;
+        $count = 0;
+        $total = count( $attachments );
         foreach ( $attachments as $id => $attachment ) {
+            $count++;
             $image = wp_get_attachment_image_src( $id, "large" );
 
             $credit = '';
@@ -153,12 +155,23 @@ class Navis_Slideshows {
             $themeta = $attachment->post_title;
             $caption = $attachment->post_excerpt;
             $permalink = $attachment->ID;
-            $slidenum = $count; // - 1;
-            if ( $count < 3 ) { // bake the first two images into the page
-                $output .= '<div id="' . $postid . '-slide' . $slidenum . '"><img src="'.$image[0].'" width="'.$image[1].'" height="'.$image[2].'"/>';
+            $slidediv = $postid . '-slide' . $count;
+
+            // This embeds the first two slides directly in the page
+            // and leaves placeholders for the remaining ones to be 
+            // loaded just-in-time with JavaScript.
+            if ( $count < 3 || $count == $total ) { 
+                $output .= sprintf( 
+                    '<div id="%s"><img src="%s" width="%d" height="%d" />', 
+                    $slidediv, $image[0], $image[1], $image[2] 
+                );
             } else {
-                $output .= '<div id="' . $postid . '-slide' . $slidenum . '" data-src="' . $image[0] . '*' . $image[1] . '*' . $image[2] .'">';
+                $output .= sprintf( 
+                    '<div id="%s" data-src="%s*%d*%d" />',
+                    $slidediv, $image[0], $image[1], $image[2]
+                );
             }
+
             $output .= '<h6>';
 
             if ( isset( $credit ) )
@@ -166,22 +179,24 @@ class Navis_Slideshows {
 
             $output .= ' <a href="#" class="slide-permalink">permalink</a></h6>';
             $output .= '<p>'.$caption.'</p></div>';
-            $count++;
         }
         $output .= '</div></div>';
+        
         $this->postid = $postid;
         $this->permalink = $plink;
         $this->slide_count = $count;
-        add_action( 'wp_footer', array( &$this, 'load_slideshow' ), 20 );
+        add_action( 'wp_footer', array( &$this, 'load_slideshow_js' ), 20 );
         
         return $output;
     }
 
 
-    function load_slideshow() {
-       // $postid, $permalink, $count ) {
-
-        echo "<script>jQuery( document ).ready( function() { loadSlideshow( " . $this->postid . ", '" . $this->permalink .  "', " . $this->slide_count . " ) });;</script>";
+    function load_slideshow_js() {
+        printf( 
+            "<script>jQuery( document ).ready( function() { " .
+                "loadSlideshow( %d, '%s', %d ) } );</script>", 
+            $this->postid, $this->permalink, $this->slide_count 
+        );
     }
 
 

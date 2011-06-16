@@ -5,7 +5,7 @@ function ensureAllImagesAreLoaded( postID, count ) {
 }
 
 function ensureImageIsLoaded( divID ) {
-    var slideDiv = $( "#" + divID );
+    var slideDiv = jQuery( "#" + divID );
     // Do nothing if the slide image already exists
     if ( slideDiv.has( "img" ).length ) {
         return;
@@ -13,53 +13,58 @@ function ensureImageIsLoaded( divID ) {
     var imgData = slideDiv.attr("data-src");
     if ( imgData ) {
         var parts = imgData.split("*");
-        var img = $("<img/>")
-            .attr("src", parts[0])
-            .attr("width", parts[1])
-            .attr("height", parts[2]);
+        var img = jQuery("<img/>")
+            .attr( "src", parts[0] )
+            .attr( "width", parts[1] )
+            .attr( "height", parts[2] );
         slideDiv.prepend( img );
     }
 }
 
-jQuery( document ).ready( function() {
-    var $ = jQuery;
+function getSlideElement( postID, slideNum ) {
+    return postID + '-slide' + slideNum;
+}
 
+function loadSlideshow( postID, permalink, totalSlides ) {
     var startSlide = 1;
     var startHash = "#1";
-    var slidePerma = "' . $plink . '";
-    var totalSlides = ' . $count . ';
-    jQuery("#slides-' . $postid . ' a.slide-permalink").attr("href", slidePerma + startHash);
+    var slideContainerDiv = '#slides-' + postID;
+    var slidePermalinkElement = slideContainerDiv + ' a.slide-permalink';
+
+    jQuery( slidePermalinkElement ).attr( "href", permalink + startHash );
 
     // Get slide number if it exists
-    if (window.location.hash) {
-        startSlide = window.location.hash.replace("#","");
-        ensureImageIsLoaded("' . $postid . '-slide" + startSlide);
-        ensureAllImagesAreLoaded("' . $postid . '", totalSlides);
-        jQuery("#slides-'.$postid.' a.slide-permalink").attr("href", slidePerma + "#" + startSlide);
+    if ( window.location.hash ) {
+        startSlide = window.location.hash.replace( "#","" );
+        if ( parseInt( startSlide ) ) {
+            ensureImageIsLoaded( getSlideElement( postID, startSlide ) );
+            ensureAllImagesAreLoaded( postID, totalSlides );
+            jQuery( slidePermalinkElement ).attr( "href", permalink + "#" + startSlide );
+        }
     }
 
-    jQuery("#slides-'.$postid.'").slides({
+    jQuery( slideContainerDiv ).slides({
         generatePagination: true,
         autoHeight: true,
         autoHeightSpeed: 0,
         effect: "fade",
         // Get the starting slide
         start: startSlide,
-        animationComplete: function(current) {
+        animationComplete: function( current ) {
             // Set the slide number as a hash
             var curSlide = "#" + current;
-            ensureImageIsLoaded("' . $postid . '-slide" + current);
+
+            ensureImageIsLoaded( getSlideElement( postID, current ) );
             var nextSlide = current + 1;
-            var nextSlideDivID = "' . $postid . '-slide" + nextSlide;
-            ensureImageIsLoaded(nextSlideDivID);
-            jQuery("#slides-'.$postid.' a.slide-permalink").attr("href", slidePerma + curSlide);
+            ensureImageIsLoaded( getSlideElement( postID, nextSlide ) );
+            jQuery( slidePermalinkElement ).attr("href", permalink + curSlide);
         }
     });
 
-    $(".navis-slideshow .pagination a").click(function(evt) {
-        var slideNum = $(this).text();
+    jQuery( ".navis-slideshow .pagination a" ).click( function( evt ) {
+        var slideNum = jQuery(this).text();
         var nextSlide = parseInt( slideNum ) + 1;
-        ensureImageIsLoaded("' . $postid . '-slide" + slideNum);
-        ensureImageIsLoaded("' . $postid . '-slide" + nextSlide);
+        ensureImageIsLoaded( getSlideElement( postID, slideNum ) );
+        ensureImageIsLoaded( getSlideElement( postID, nextSlide ) );
     });
-});
+}

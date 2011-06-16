@@ -25,13 +25,19 @@
 
 class Navis_Slideshows {
     function __construct() {
-        add_filter( 'post_gallery', 'handle_slideshow', 10, 2 );
-        add_filter( 'the_posts', 'conditionally_add_slideshow_deps' );
+        add_filter( 
+            'the_posts', array( &$this, 'conditionally_add_slideshow_deps' ) 
+        );
+        add_filter( 
+            'post_gallery', array( &$this, 'handle_slideshow' ), 10, 2 
+        );
 
         if ( ! is_admin() ) 
             return;
 
-        add_action( 'save_post', 'tag_post_as_slideshow', 10, 2 );
+        add_action( 
+            'save_post', array( &$this, 'tag_post_as_slideshow' ), 10, 2 
+        );
     }
 
     /**
@@ -51,17 +57,22 @@ class Navis_Slideshows {
 
         if ( $shortcode_found ) {
             // jQuery slides plugin, available at http://slidesjs.com/
+            $slides_src = plugins_url( 'js/slides.min.jquery.js', __FILE__ );
             wp_enqueue_script( 
-                'jquery-slides', 
-                navis_get_theme_script_url( 'slides.min.jquery.js' ),
-                array( 'jquery' ), '1.1.4', true
+                'jquery-slides', $slides_src, array( 'jquery' ), '1.1.7', true
+            );
+
+            // our custom js
+            $show_src = plugins_url( 'js/navis-slideshows.js', __FILE__ );
+            wp_enqueue_script( 
+                'navis-slideshows', $show_src, array( 'jquery-slides' ), 
+                '0.1', true
             );
 
             // slides-specific CSS
+            $slides_css = plugins_url( 'css/slides.css', __FILE__ );
             wp_enqueue_style( 
-                'slides',
-                navis_get_theme_style_url( 'slides.css' ),
-                array(), '1.0'
+                'slides', $slides_css, array(), '1.0'
             );
         }
 
@@ -133,8 +144,12 @@ class Navis_Slideshows {
         /*-- Add images --*/
         $count = 1;
         foreach ( $attachments as $id => $attachment ) {
-            $image = wp_get_attachment_image_src($id, "large");
-            $credit = argo_get_media_credit( $id );
+            $image = wp_get_attachment_image_src( $id, "large" );
+
+            $credit = '';
+            if ( function_exists( 'argo_get_media_credit' ) )
+                $credit = argo_get_media_credit( $id );
+
             $themeta = $attachment->post_title;
             $caption = $attachment->post_excerpt;
             $permalink = $attachment->ID;
@@ -144,14 +159,31 @@ class Navis_Slideshows {
             } else {
                 $output .= '<div id="' . $postid . '-slide' . $slidenum . '" data-src="' . $image[0] . '*' . $image[1] . '*' . $image[2] .'">';
             }
-            $output .= '<h6>'.$credit.' <a href="#" class="slide-permalink">permalink</a></h6>';
+            $output .= '<h6>';
+
+            if ( isset( $credit ) )
+                $output .= $credit;
+
+            $output .= ' <a href="#" class="slide-permalink">permalink</a></h6>';
             $output .= '<p>'.$caption.'</p></div>';
             $count++;
         }
         $output .= '</div></div>';
-
+        $this->postid = $postid;
+        $this->permalink = $plink;
+        $this->slide_count = $count;
+        add_action( 'wp_footer', array( &$this, 'load_slideshow' ), 20 );
+        
         return $output;
     }
+
+
+    function load_slideshow() {
+       // $postid, $permalink, $count ) {
+
+        echo "<script>jQuery( document ).ready( function() { loadSlideshow( " . $this->postid . ", '" . $this->permalink .  "', " . $this->slide_count . " ) });;</script>";
+    }
+
 
     /**
      * Applies the Slideshow custom taxonomy term to a post when it contains

@@ -148,9 +148,12 @@ class Navis_Slideshows {
             $count++;
             $image = wp_get_attachment_image_src( $id, "large" );
 
+            // Credit functionality provided by navis-media-credit plugin
             $credit = '';
-            if ( function_exists( 'argo_get_media_credit' ) )
-                $credit = argo_get_media_credit( $id );
+            if ( function_exists( 'navis_get_media_credit' ) ) {
+                $creditor = navis_get_media_credit( $id );
+                $credit = $creditor->to_string();
+            }
 
             $themeta = $attachment->post_title;
             $caption = $attachment->post_excerpt;

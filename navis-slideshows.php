@@ -27,9 +27,12 @@ class Navis_Slideshows {
     static $include_slideshow_deps;
 
     function __construct() {
+        add_action( 'init', array( &$this, 'add_slideshow_styles' ) );
+
         add_filter( 
             'wp_footer', array( &$this, 'conditionally_add_slideshow_deps' ) 
         );
+
         add_filter( 
             'post_gallery', array( &$this, 'handle_slideshow' ), 10, 2 
         );
@@ -41,6 +44,16 @@ class Navis_Slideshows {
             'save_post', array( &$this, 'tag_post_as_slideshow' ), 10, 2 
         );
     }
+
+
+    function add_slideshow_styles() {
+        // slides-specific CSS
+        $slides_css = plugins_url( 'css/slides.css', __FILE__ );
+        wp_enqueue_style( 
+            'navis-slides', $slides_css, array(), '1.0'
+        );
+    }
+
 
     /**
      * Register and enqueue the javascript and CSS dependencies
@@ -64,12 +77,6 @@ class Navis_Slideshows {
         );
         wp_print_scripts( 'navis-slideshows' );
 
-        // slides-specific CSS
-        $slides_css = plugins_url( 'css/slides.css', __FILE__ );
-        wp_register_style( 
-            'navis-slides', $slides_css, array(), '1.0'
-        );
-        wp_print_styles( 'navis-slides' );
     }
 
 

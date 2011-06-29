@@ -188,18 +188,14 @@ class Navis_Slideshows {
         $this->postid = $postid;
         $this->permalink = $plink;
         $this->slide_count = $count;
-        add_action( 'wp_footer', array( &$this, 'load_slideshow_js' ), 20 );
-        
-        return $output;
-    }
 
-
-    function load_slideshow_js() {
-        printf( 
+        $output .= sprintf( 
             "<script>jQuery( document ).ready( function() { " .
                 "loadSlideshow( %d, '%s', %d ) } );</script>", 
             $this->postid, $this->permalink, $this->slide_count 
         );
+
+        return $output;
     }
 
 

@@ -3,7 +3,7 @@
  * Plugin Name: Navis Slideshows
  * Description: Slideshows that take advantage of the Slides jQuery plugin.
  * Version: 0.1
- * Author: Marc Lavallee and Wes Lindamood
+ * Author: Project Argo
  * License: GPLv2
 */
 /*
@@ -27,7 +27,7 @@ class Navis_Slideshows {
     static $include_slideshow_deps;
 
     function __construct() {
-        add_action( 'init', array( &$this, 'add_slideshow_styles' ) );
+        add_action( 'init', array( &$this, 'add_slideshow_header' ) );
 
         add_filter( 
             'wp_footer', array( &$this, 'conditionally_add_slideshow_deps' ) 
@@ -46,13 +46,20 @@ class Navis_Slideshows {
     }
 
 
-    function add_slideshow_styles() {
+    function add_slideshow_header() {
         // slides-specific CSS
         $slides_css = plugins_url( 'css/slides.css', __FILE__ );
         wp_enqueue_style( 
             'navis-slides', $slides_css, array(), '1.0'
         );
+        
+        // load Google jQuery API
+		wp_register_script('jqslides', 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js', true, '1.6.4', false);
+
+		wp_enqueue_script('jqslides');    
     }
+    
+    
 
 
     /**
@@ -65,7 +72,7 @@ class Navis_Slideshows {
         // jQuery slides plugin, available at http://slidesjs.com/
         $slides_src = plugins_url( 'js/slides.min.jquery.js', __FILE__ );
         wp_register_script( 
-            'jquery-slides', $slides_src, array( 'jquery' ), '1.1.7', true
+            'jquery-slides', $slides_src, array( 'jqslides' ), '1.1.7', true
         );
         wp_print_scripts( 'jquery-slides' );
 

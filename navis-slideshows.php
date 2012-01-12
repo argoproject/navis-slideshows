@@ -260,7 +260,7 @@ class Navis_Slideshows {
     //slideshow options page 
 	
     function argo_slideshow_options() {
-        add_options_page('ArgoSlideshow', 'Argo Slideshow', 'manage_options', 
+        add_options_page('ArgoSlideshow', 'Navis Slideshow', 'manage_options', 
                         'argoslideshow', array(&$this, 'render_options_page'));
     }
     

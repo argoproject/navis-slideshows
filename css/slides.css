@@ -85,7 +85,7 @@
 
 .navis-slideshow .pagination li {
     float: left;
-    margin: 0 1px;
+    margin: 0 1px !important;
     list-style: none
 }
 

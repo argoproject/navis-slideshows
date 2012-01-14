@@ -41,7 +41,7 @@
 }
 
 #content .slides_container h6 {
-    margin: 6px 0 4px 0;
+    margin: 6px 1px 4px 0;
     text-align: right;
     font-weight: normal;
     font-size: 11px;
@@ -86,7 +86,9 @@
 .navis-slideshow .pagination li {
     float: left;
     margin: 0 1px !important;
-    list-style: none
+    list-style: none;
+    background: none !important;
+    padding: 0 !important;
 }
 
 .pagination li a {

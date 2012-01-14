@@ -68,7 +68,7 @@ class Navis_Slideshows {
     function argo_slideshow_css() { 
     $sswidth = intval(get_option( 'argoslideshow_default_width', 600 ));
     ?>
-    	<style type="text/css">.navis-slideshow .slides_container div {width: <?php echo($sswidth)?>px;}</style>
+    	<style type="text/css">.navis-slideshow  {width: <?php echo($sswidth)?>px;} .navis-slideshow .slides_container div {width: <?php echo($sswidth)?>px;}</style>
     <?php
     }
 

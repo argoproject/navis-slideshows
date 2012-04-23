@@ -75,7 +75,7 @@
 
 }
 
-.pagination {
+.navis-slideshow .pagination {
     margin: 0;
     width: 540px;
     position: absolute;
@@ -89,7 +89,7 @@
     list-style: none
 }
 
-.pagination li a {
+.navis-slideshow .pagination li a {
     display: block;
     width: 12px;
     height: 0;
@@ -100,7 +100,7 @@
     overflow: hidden
 }
 
-.pagination li.current a {
+.navis-slideshow .pagination li.current a {
     background-position: 0 -12px
 }
 

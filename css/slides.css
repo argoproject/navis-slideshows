@@ -1,9 +1,8 @@
 .navis-slideshow {
-    /*background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#000));*/
     background-color: #efefef;
     font-family: Arial;
     margin-bottom: 20px;
-    padding: 10px 9px;
+    padding: 10px 8px;
     font-size: 11px;
     color: #666;
     -webkit-box-shadow: 3px 4px 4px #ccc;
@@ -18,7 +17,7 @@
 
 /* Set the width of your slides container */
 .slides_container {
-    width: 602px;
+    width: 100%;
     margin-top: 20px;
     display: none;
 }
@@ -42,12 +41,12 @@
 }
 
 #content .slides_container h6 {
-    margin: 6px 0 4px 0;
+    margin: 6px 1px 4px 0;
     text-align: right;
     font-weight: normal;
     font-size: 11px;
     font-style: italic;
-    color: #999
+    color: #999;
 }
 
 #content .slide-permalink {
@@ -59,6 +58,7 @@
     background-color: #ddd;
     padding: 3px 5px;
     border: 1px solid #ccc;
+    outline: none;
 }
 
 #content .slide-permalink:hover {
@@ -72,12 +72,12 @@
 .slides_container div {
     width: 600px;
     display: block;
-
 }
 
-.navis-slideshow .pagination {
-    margin: 0;
+.navis-slideshow .pagination {    
+    margin: 0 !important;
     width: 540px;
+    padding: 0;
     position: absolute;
     top: 10px;
     left: 10px
@@ -85,8 +85,10 @@
 
 .navis-slideshow .pagination li {
     float: left;
-    margin: 0 1px;
-    list-style: none
+    margin: 0 1px !important;
+    list-style: none;
+    background: none !important;
+    padding: 0 !important;
 }
 
 .navis-slideshow .pagination li a {
@@ -108,34 +110,39 @@
     background: url(../img/slide-nav.png) no-repeat top left;
     text-indent: -10000px;
     display: block;
-    text-decoration: none
+    text-decoration: none;
+    outline: none;
 }
 
-a.prev {
+.navis-slideshow a.prev {
     position: absolute;
     top: 5px;
     right: 32px;
     background-position: 0 -213px;
     width: 21px;
-    height: 21px
+    height: 21px;
+    z-index: 10;
+    outline: none;
 }
 
-a.prev:hover {
+.navis-slideshow a.prev:hover {
     background-position: 0 -142px;
     width: 21px;
-    height: 21px
+    height: 21px;
 }
 
-a.next {
+.navis-slideshow a.next {
     position: absolute;
     top: 5px;
     right: 7px;
     background-position: 0 -71px;
     width: 21px;
-    height: 21px
+    height: 21px;
+    z-index: 10;
+    outline: none;
 }
 
-a.next:hover {
+.navis-slideshow a.next:hover {
     background-position: 0 0;
     width: 21px;
     height: 21px

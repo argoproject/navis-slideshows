@@ -58,10 +58,12 @@ class Navis_Slideshows {
             'navis-slides', $slides_css, array(), '1.0'
         );
         
-        // load Google jQuery API
-		wp_register_script('jqslides', 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js', true, '1.6.4', false);
+		// Check if jQuery is already loaded. If not, load via Google jQuery API
+		if ( ! jQuery ) {
+			wp_register_script('jqslides', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', true, '1.7.2', false);
 
-		wp_enqueue_script('jqslides');    
+			wp_enqueue_script('jqslides');
+		}
     }
     
     //add slideshow width to header

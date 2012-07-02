@@ -66,7 +66,6 @@ class Navis_Slideshows {
     
     //add slideshow width to header
     function argo_slideshow_css() { 
-    $sswidth = intval(get_option( 'argoslideshow_default_width', 600 ));
     ?>
     	<style type="text/css">.navis-slideshow  {width: 95%;} .navis-slideshow .slides_container div {width: 100%;}</style>
     <?php
@@ -257,43 +256,6 @@ class Navis_Slideshows {
         wp_set_object_terms( $post_ID, $new_post_terms, $taxonomy );
     }
     
-    //slideshow options page 
-	
-    function argo_slideshow_options() {
-        add_options_page('ArgoSlideshow', 'Navis Slideshow', 'manage_options', 
-                        'argoslideshow', array(&$this, 'render_options_page'));
-    }
-    
-    function render_options_page() { ?>
-        <h2>Navis Slideshow Options</h2>
-        <form action="options.php" method="post">
-            
-            <?php settings_fields('argoslideshow'); ?>
-            <?php do_settings_sections('argoslideshow'); ?>
-            
-            <p><input class="button-primary" name="Submit" type="submit" value="<?php esc_attr_e('Save Changes'); ?>" /></p>
-            </form>
-        <?php
-    }
-    
-    function settings_init() {
-        add_settings_section( 'argoslideshow', '',
-            array(&$this, 'settings_section'), 'argoslideshow');
-        
-        add_settings_field('argoslideshow_default_width', 'Default slideshow width (px)',
-            array(&$this, 'default_width_field'), 'argoslideshow', 'argoslideshow');
-        register_setting('argoslideshow', 'argoslideshow_default_width');
-        
-    }
-    
-    function default_width_field() {
-        $option = intval(get_option( 'argoslideshow_default_width', 600 ));
-        echo "<input type='text' value='$option' name='argoslideshow_default_width' />";
-    }
-    
-    function settings_section() {}
-    
-    // end slideshow options page    
 }
 
 new Navis_Slideshows;

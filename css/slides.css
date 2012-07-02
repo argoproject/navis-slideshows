@@ -2,7 +2,7 @@
     background-color: #efefef;
     font-family: Arial;
     margin-bottom: 20px;
-    padding: 10px 8px;
+    padding: 10px 2.5%;
     font-size: 11px;
     color: #666;
     -webkit-box-shadow: 3px 4px 4px #ccc;
@@ -20,6 +20,7 @@
     width: 100%;
     margin-top: 20px;
     display: none;
+    padding:5px 0;
 }
 
 .ie6 .slides_container {
@@ -30,6 +31,7 @@
     display: block;
     margin: 0 auto;
     border: 1px solid #ddd;
+    width:100%;
 }
 
 .slides_container p {
@@ -70,13 +72,16 @@
 
 /* Set the width of your slides */
 .slides_container div {
-    width: 600px;
+    width: 100%;
     display: block;
+}
+div.slides_control {
+	width: 100% !important;
 }
 
 .navis-slideshow .pagination {    
     margin: 0 !important;
-    width: 540px;
+    width: 95%;
     padding: 0;
     position: absolute;
     top: 10px;

@@ -68,7 +68,7 @@ class Navis_Slideshows {
     function argo_slideshow_css() { 
     $sswidth = intval(get_option( 'argoslideshow_default_width', 600 ));
     ?>
-    	<style type="text/css">.navis-slideshow  {width: <?php echo($sswidth)?>px;} .navis-slideshow .slides_container div {width: <?php echo($sswidth)?>px;}</style>
+    	<style type="text/css">.navis-slideshow  {width: 95%;} .navis-slideshow .slides_container div {width: 100%;}</style>
     <?php
     }
 
@@ -184,7 +184,7 @@ class Navis_Slideshows {
             // loaded just-in-time with JavaScript.
             if ( $count < 3 || $count == $total ) { 
                 $output .= sprintf( 
-                    '<div id="%s"><img src="%s" width="%d" height="%d" />', 
+                    '<div id="%s"><img src="%s" />', 
                     $slidediv, $image[0], $image[1], $image[2] 
                 );
             } else {

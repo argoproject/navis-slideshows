@@ -288,23 +288,9 @@
 			
 			// set css for slides
 			control.children().css({
-				position: 'absolute',
-				top: 0, 
-				left: control.children().outerWidth(),
 				zIndex: 0,
 				display: 'none'
 			 });
-			
-			// set css for control div
-			control.css({
-				position: 'relative',
-				// size of control 3 x slide width
-				width: (width * 3),
-				// set height to slide height
-				height: height,
-				// center control to slide
-				left: -width
-			});
 			
 			// show slides
 			$('.' + option.container, elem).css({

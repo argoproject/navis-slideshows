@@ -29,7 +29,7 @@ function loadSlideshow( postID, permalink, totalSlides ) {
 
     jQuery( slideContainerDiv ).slides({
         generatePagination: true,
-        autoHeight: true,
+        autoHeight: false,
         autoHeightSpeed: 0,
         effect: "fade",
         // Get the starting slide
@@ -101,8 +101,6 @@ function ensureImageIsLoaded( postID, slideNum ) {
         var parts = imgData.split( "*" );
         var img = jQuery( "<img/>" )
             .attr( "src", parts[0] )
-            .attr( "width", parts[1] )
-            .attr( "height", parts[2] );
         slideDiv.prepend( img );
     }
 }

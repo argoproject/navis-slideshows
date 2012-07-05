@@ -67,7 +67,7 @@ class Navis_Slideshows {
     //add slideshow width to header
     function argo_slideshow_css() { 
     ?>
-    	<style type="text/css">.navis-slideshow  {width: 95%;} .navis-slideshow .slides_container div {width: 100%;}</style>
+    	<style type="text/css">.navis-slideshow  {width: 94%;} .navis-slideshow .slides_container div {width: 100%;}</style>
     <?php
     }
 

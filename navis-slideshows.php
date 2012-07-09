@@ -45,9 +45,6 @@ class Navis_Slideshows {
             'save_post', array( &$this, 'tag_post_as_slideshow' ), 10, 2 
         );
         
-        add_action( 'admin_menu', array(&$this, 'argo_slideshow_options'));
-        
-        add_action( 'admin_init', array(&$this, 'settings_init'));
     }
 
 

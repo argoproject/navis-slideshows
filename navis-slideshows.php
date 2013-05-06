@@ -34,7 +34,7 @@ class Navis_Slideshows {
             'wp_footer', array( &$this, 'conditionally_add_slideshow_deps' ) 
         );
 
-        add_filter( 
+        add_filter(
             'post_gallery', array( &$this, 'handle_slideshow' ), 10, 2 
         );
 
@@ -44,6 +44,8 @@ class Navis_Slideshows {
         add_action( 
             'save_post', array( &$this, 'tag_post_as_slideshow' ), 10, 2 
         );
+        remove_shortcode('gallery');
+        add_shortcode('gallery', array( &$this, 'handle_slideshow' ),10,2);
         
     }
 

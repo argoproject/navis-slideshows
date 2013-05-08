@@ -34,7 +34,7 @@ class Navis_Slideshows {
             'wp_footer', array( &$this, 'conditionally_add_slideshow_deps' ) 
         );
 
-        add_filter( 
+        add_filter(
             'post_gallery', array( &$this, 'handle_slideshow' ), 10, 2 
         );
 
@@ -51,6 +51,7 @@ class Navis_Slideshows {
     function add_slideshow_header() {
         // slides-specific CSS
         $slides_css = plugins_url( 'css/slides.css', __FILE__ );
+        wp_enqueue_script("jquery");
         wp_enqueue_style( 
             'navis-slides', $slides_css, array(), '1.0'
         );
@@ -116,21 +117,33 @@ class Navis_Slideshows {
             'columns'    => 3,
             'size'       => 'thumbnail',
         ), $attr ) );
-
         $id = intval( $id );
         // XXX: this could be factored out to a common function for getting
         // a post's images
-        $attachments = get_children( array(
+        $attachments = array();
+        if (isset($attr['ids'])) {
+            /* Process ids if given with gallery shortcode eg [gallery ids='1,2,3,4,5] */
+            $_attachments = get_posts( array('include' => $attr['ids'], 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+            $attachments = array();
+            foreach ( $_attachments as $key => $val ) {
+                $attachments[$val->ID] = $_attachments[$key];
+            }
+        } else {
+            /* If no ids are given, use all attachments for current post */
+             $attachments = get_children( array(
             'post_parent'    => $id, 
             'post_status'    => 'inherit', 
             'post_type'      => 'attachment', 
             'post_mime_type' => 'image', 
             'order'          => $order, 
             'orderby'        => $orderby
-        ) );
-
-        if ( empty( $attachments ) )
-            return '';
+            ) );
+        }
+        
+        if ( empty( $attachments ) ) {
+           return 'No images found for gallery'; 
+        }
+            
 
         if ( is_feed() ) {
             $output = "\n";

@@ -15,6 +15,10 @@
     outline: none;
 }
 
+.navis-slideshow .pagination li {
+  list-style-type:none !important;
+}
+
 /* Set the width of your slides container */
 .slides_container {
     width: 100%;
@@ -79,7 +83,7 @@ div.slides_control {
 	width: 100% !important;
 }
 
-.navis-slideshow .pagination {    
+.navis-slideshow .pagination {
     margin: 0 !important;
     width: 95%;
     padding: 0;

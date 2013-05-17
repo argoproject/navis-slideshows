@@ -174,8 +174,10 @@ class Navis_Slideshows {
 		$output .= '
 			<div id="slides-'.$postid.'" class="navis-slideshow">
 			<p class="slide-nav">
+
 			<a href="#" class="prev"></a>
 			<a href="#" class="next"></a>
+
 			</p>
 
 			<div class="slides_container">';

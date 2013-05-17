@@ -102,7 +102,6 @@ function ensureImageIsLoaded( postID, slideNum ) {
         var img = jQuery( "<img/>" )
             .attr( "src", parts[0] );
         if ( urlData ) img = img.wrap("<a href='" + urlData + "' target='_blank' />").parent();
-        console.log( img.get() );
         slideDiv.prepend( img );
     }
 }

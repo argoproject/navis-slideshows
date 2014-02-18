@@ -170,7 +170,7 @@ class Navis_Slideshows {
 
 		$postid = ($post->ID) ? $post->ID : rand(0,10000);
 		$plink = get_permalink();
-		$post_html_id = $postid . "-" . rand(0,10000);	//appending a random value so that 2 slideshows can peacefully coexist
+		$post_html_id = $postid . "-" . wp_create_nonce( 'slideshow' . time() . rand(0,10000) );	//appending a random value so that 2 slideshows can peacefully coexist
 
 		$output .= '
 			<div id="slides-'.$post_html_id.'" class="navis-slideshow">

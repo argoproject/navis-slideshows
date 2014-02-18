@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Navis Slideshows
  * Description: Slideshows that take advantage of the Slides jQuery plugin.
- * Version: 0.2
+ * Version: 0.3
  * Author: Project Argo, Crowd Favorite, Cornershop Creative
  * License: GPLv2
 */
@@ -168,11 +168,12 @@ class Navis_Slideshows {
 			return $output;
 		}
 
-		$postid = $post->ID;
+		$postid = ($post->ID) ? $post->ID : rand(0,10000);
 		$plink = get_permalink();
+		$post_html_id = $postid . "-" . wp_create_nonce( 'slideshow' . time() . rand(0,10000) );	//appending a random value so that 2 slideshows can peacefully coexist
 
 		$output .= '
-			<div id="slides-'.$postid.'" class="navis-slideshow">
+			<div id="slides-'.$post_html_id.'" class="navis-slideshow">
 			<p class="slide-nav">
 
 			<a href="#" class="prev"></a>
@@ -199,7 +200,7 @@ class Navis_Slideshows {
 			$themeta = $attachment->post_title;
 			$caption = $attachment->post_excerpt;
 			$permalink = $attachment->ID;
-			$slidediv = $postid . '-slide' . $count;
+			$slidediv = $post_html_id . '-slide' . $count;
 			$img_url = wp_get_attachment_url( $id );
 
 			// This embeds the first two slides directly in the page
@@ -241,13 +242,13 @@ class Navis_Slideshows {
 		}
 		$output .= '</div></div>';
 
-		$this->postid = $postid;
+		$this->postid = $post_html_id;
 		$this->permalink = $plink;
 		$this->slide_count = $count;
 
 		$output .= sprintf(
 			"<script>jQuery( document ).ready( function() { " .
-				"loadSlideshow( %d, '%s', %d ) } );</script>",
+				"loadSlideshow( '%s', '%s', %d ) } );</script>",
 			$this->postid, $this->permalink, $this->slide_count
 		);
 
